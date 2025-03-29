@@ -9,6 +9,8 @@ import ProfilePage from './pages/ProfilePage';
 import { axiosInstance } from './lib/axios';
 import { useAuthStore } from './store/useAuthStore';
 
+import {Toaster} from "react-hot-toast"
+
 import { Navigate } from 'react-router-dom';
 
 import {Loader} from "lucide-react";
@@ -27,7 +29,7 @@ function App() {
       <Loader className = "size-10 animate-spin"/>  
       {/* lucide react for icons */}
     </div>
-  )
+  );
 
   return (
     <>
@@ -41,6 +43,8 @@ function App() {
           <Route path='/settings' element={<SettingsPage />} />
           <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to = "/login" />} />
         </Routes>
+
+        <Toaster />
       </div>
 
     </>
