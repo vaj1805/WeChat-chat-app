@@ -9,20 +9,25 @@ import ProfilePage from './pages/ProfilePage';
 import { axiosInstance } from './lib/axios';
 import { useAuthStore } from './store/useAuthStore';
 
+
 import {Toaster} from "react-hot-toast"
 
 import { Navigate } from 'react-router-dom';
 
 import {Loader} from "lucide-react";
+import { useThemeStore } from './store/useThemeStore';
 
 function App() {
   const {authUser , checkAuth , isCheckingAuth} = useAuthStore();
+
+  const {theme} = useThemeStore();
+
 
   useEffect(() => {
     checkAuth();
   } , [checkAuth]);
 
-  console.log(authUser);
+  //console.log(authUser);
 
   if(isCheckingAuth && !authUser) return (
     <div className='flex items-center justify-center h-screen'>
@@ -33,7 +38,7 @@ function App() {
 
   return (
     <>
-      <div>
+      <div data-theme = {theme}>
         <NavBar />
 
         <Routes>

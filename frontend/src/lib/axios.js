@@ -5,3 +5,11 @@ export const axiosInstance = axios.create({
     withCredentials : true
     //sending cookies in each request.
 })
+
+
+
+
+
+
+
+
