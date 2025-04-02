@@ -4,20 +4,25 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import { toast } from "react-hot-toast";
+import {io} from "socket.io-client";
 
-export const useAuthStore = create((set) => ({
+const BASE_URL = "http://localhost:5001";
+
+export const useAuthStore = create((set , get) => ({
     authUser: null,
     isSigningUp: false,
     isLoggingIn: false,
     isUpdatingProfile: false,
-
     isCheckingAuth: true,
+    onlineUsers : [],
+    socket:null,
 
     checkAuth: async () => {
         try {
             const res = await axiosInstance.get("/auth/check");
 
-            set({ authUser: await res.data })
+            set({ authUser: await res.data });
+            get().connectSocket();
         }
         catch (error) {
             console.log("Error in checkAuth : ", error);
@@ -28,13 +33,14 @@ export const useAuthStore = create((set) => ({
         }
     },
 
+    //same for signup, we connect socket for showing online 
     signup: async (data) => {
         set({ isSigningUp: true })
         try {
             const res = await axiosInstance.post("/auth/signup", data);
             set({ authUser: res.data })
             toast.success("Account created successfully");
-
+            get().connectSocket();
 
         } catch (error) {
             toast.error(error.response.data.message);
@@ -42,7 +48,8 @@ export const useAuthStore = create((set) => ({
             set({ isSigningUp: false });
         }
     },
-
+    
+    //want to connect a socket as soon as login happens.
     login: async (data) => {
         set({ isLoggingIn: true });
         try {
@@ -64,6 +71,8 @@ export const useAuthStore = create((set) => ({
             await axiosInstance.post("/auth/logout");
             set({ authUser: null });
             toast.success("Logged out successfully");
+            //socket.
+            get().disconnectSocket();
         } catch (error) {
             toast.error(error.response.data.message);
         }
@@ -81,6 +90,24 @@ export const useAuthStore = create((set) => ({
         } finally {
             set({ isUpdatingProfile: false });
         }
+    },
+
+    connectSocket : () => {
+        //for checking if connection is authenticated.
+        const {authUser} = get();
+        if(!authUser || get().socket?.connected) return
+        //optimisation above.
+
+        const socket = io(BASE_URL);
+        socket.connect();
+
+        set({socket : socket});
+
+    },
+
+    //for logout 
+    disconnectSocket : () => {
+        if(get().socket?.connected) get().socket.disconnect();
     }
 
 }))
