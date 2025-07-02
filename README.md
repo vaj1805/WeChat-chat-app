@@ -131,43 +131,4 @@ WeChat-chat-app/
 ├── package.json            # Root scripts for build & start
 ├── README.md               # (this file)
 └── .gitignore
-API Endpoints
-All endpoints are prefixed with /api
-
-Auth
-POST /api/auth/register – Create a new user
-
-Body: { fullname, email, password }
-
-Returns: { token, user }
-
-POST /api/auth/login – Authenticate user
-
-Body: { email, password }
-
-Returns: { token, user }
-
-Users
-GET /api/users/online – List online users (protected)
-
-GET /api/users/all – Get all registered users (protected)
-
-Messages
-GET /api/messages/:conversationId – Fetch message history (protected)
-
-POST /api/messages/ – Send a new message (protected)
-
-Body: { senderId, receiverId, text, image? }
-
-Contributing
-Fork it
-
-Create your feature branch (git checkout -b feature/YourFeature)
-
-Commit your changes (git commit -m 'Add some feature')
-
-Push to the branch (git push origin feature/YourFeature)
-
-Open a Pull Request
-
 
