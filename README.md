@@ -60,3 +60,114 @@ Live Demo: [wechat-chat-app.onrender.com](https://wechat-chat-app.onrender.com)
 ```bash
 git clone https://github.com/vaj1805/WeChat-chat-app.git
 cd WeChat-chat-app
+
+Environment Variables
+Create a .env file in both the backend/ and frontend/ folders.
+
+backend/.env
+ini
+Copy
+Edit
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+frontend/.env
+ini
+Copy
+Edit
+REACT_APP_API_URL=http://localhost:5000
+Tip: If you deploy backend and frontend separately (e.g. Render, Vercel), update REACT_APP_API_URL to your deployed backend URL.
+
+Install & Run (Development)
+bash
+Copy
+Edit
+# Backend
+cd backend
+npm install
+npm run dev         # starts Express + Socket.IO server (e.g. with nodemon)
+
+# In a separate terminal: Frontend
+cd ../frontend
+npm install
+npm start           # starts React development server
+Open your browser at http://localhost:3000 and you’re live!
+
+Build & Run (Production)
+From the project root:
+
+bash
+Copy
+Edit
+npm run build       # installs both backend & frontend, builds frontend
+npm start           # launches the backend (which serves the built frontend)
+Your production build will be served from Express on the port you set in backend/.env.
+
+Folder Structure
+bash
+Copy
+Edit
+WeChat-chat-app/
+│
+├── backend/                # Express + Socket.IO server
+│   ├── controllers/        # Route handlers
+│   ├── models/             # Mongoose schemas (User, Message)
+│   ├── routes/             # API & auth routes
+│   ├── middleware/         # Auth, error handling
+│   ├── utils/              # Helper functions (e.g. JWT)
+│   ├── server.js           # Entry point
+│   └── .env                # Environment variables
+│
+├── frontend/               # React client
+│   ├── src/
+│   │   ├── components/     # Shared UI components
+│   │   ├── context/        # Zustand stores
+│   │   ├── pages/          # Login, Signup, Chat pages
+│   │   ├── services/       # axios & socket.io-client setup
+│   │   ├── App.jsx         # Routes & layout
+│   │   └── index.css       # Tailwind + daisyUI imports
+│   └── .env                # REACT_APP_API_URL, etc.
+│
+├── package.json            # Root scripts for build & start
+├── README.md               # (this file)
+└── .gitignore
+API Endpoints
+All endpoints are prefixed with /api
+
+Auth
+POST /api/auth/register – Create a new user
+
+Body: { fullname, email, password }
+
+Returns: { token, user }
+
+POST /api/auth/login – Authenticate user
+
+Body: { email, password }
+
+Returns: { token, user }
+
+Users
+GET /api/users/online – List online users (protected)
+
+GET /api/users/all – Get all registered users (protected)
+
+Messages
+GET /api/messages/:conversationId – Fetch message history (protected)
+
+POST /api/messages/ – Send a new message (protected)
+
+Body: { senderId, receiverId, text, image? }
+
+Contributing
+Fork it
+
+Create your feature branch (git checkout -b feature/YourFeature)
+
+Commit your changes (git commit -m 'Add some feature')
+
+Push to the branch (git push origin feature/YourFeature)
+
+Open a Pull Request
+
+
